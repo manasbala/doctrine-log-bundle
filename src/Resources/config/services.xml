@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service class="Mb\DoctrineLogBundle\EventListener\Logger" id="mb_doctrine_log.event_listener.logger">
+            <tag name="doctrine.event_listener" event="postPersist" priority="1"/>
+            <tag name="doctrine.event_listener" event="postUpdate" priority="1"/>
+            <tag name="doctrine.event_listener" event="postFlush" priority="1"/>
+            <tag name="doctrine.event_listener" event="preRemove" priority="1"/>
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="mb_doctrine_log.service.logger"/>
+            <argument type="service" id="jms_serializer.serializer"/>
+            <argument type="service" id="annotations.reader"/>
+        </service>
+
+        <service class="Mb\DoctrineLogBundle\Service\Logger" id="mb_doctrine_log.service.logger">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+    </services>
+</container>

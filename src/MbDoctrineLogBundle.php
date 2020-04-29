@@ -1,6 +1,6 @@
 <?php
 
-namespace Mb\DoctrineLog;
+namespace Mb\DoctrineLogBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
