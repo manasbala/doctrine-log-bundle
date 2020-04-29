@@ -100,3 +100,18 @@ mb_doctrine_log:
     - updatedAt
 
 ```
+
+How data will be saved
+----------------------
+
+In the `mb_entity_log` table there are 9 columns
+
+ 1. id (primary key)
+ 2. object_class (the class being changed)
+ 3. foreign_key (the id of the object)
+ 4. action (create|update|delete)
+ 5. changes (serialized changes, keys are property name, and value is an array, 1st element prev val, 2nd element new val)
+ 6. created_by (the user to blame)
+ 7. updated_by (the user to blame)
+ 8. created_at (timestamp)
+ 9. updated_at
