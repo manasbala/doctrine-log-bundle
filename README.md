@@ -90,7 +90,7 @@ Configuration
 If you are using blameable trait or timestampable trait then you must want to log changes of those properties. Or you may have some common properties that is added in many entries and you don't want to log the changes of those properties then add this configuration.
 
 ```yaml
-//config/packages/mb_doctrine_log.yaml
+# config/packages/mb_doctrine_log.yaml
 
 mb_doctrine_log:
   ignore_properties:
