@@ -1,4 +1,4 @@
-# doctrine-log-bundle
+# DoctrineLogBundle
 Symfony bundle to enable auto logging doctrine entity changes.
 
 Installation
