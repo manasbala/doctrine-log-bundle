@@ -5,6 +5,11 @@ Often projects need to log change to see the complete history of changes are mad
 
 This bundle is tested on symfony 4
 
+Prerequisities
+--------------
+
+This bundle use `stof/doctrine-extensions-bundle` to use blameable and timestampable. Install the bundle first and configure to use blamable and timestampable. Read the installation guide here https://symfony.com/doc/master/bundles/StofDoctrineExtensionsBundle/index.html
+
 Installation
 ============
 
