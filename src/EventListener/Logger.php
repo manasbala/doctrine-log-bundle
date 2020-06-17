@@ -134,7 +134,7 @@ class Logger
     private function log($entity, $action)
     {
         try {
-            $class = new ReflectionClass($entity);
+            $class = new ReflectionClass(str_replace('Proxies\__CG__\\', '', get_class($entity)));
             $annotation = $this->reader->getClassAnnotation($class, Loggable::class);
             if ($annotation instanceof Loggable) {
                 $changes = null;
