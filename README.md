@@ -220,5 +220,3 @@ In the `mb_entity_log` table there are 9 columns
  9. updated_at
 
 Now you can choose how to display this data to super admin.
-
-TODO: method listener
