@@ -25,6 +25,6 @@ class MbDoctrineLogExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $definition = $container->getDefinition('mb_doctrine_log.event_listener.logger');
-        $definition->setArgument(4, $config['ignore_properties']);
+        $definition->setArgument(5, $config['ignore_properties']);
     }
 }

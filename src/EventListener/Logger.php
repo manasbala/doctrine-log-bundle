@@ -2,16 +2,16 @@
 
 namespace Mb\DoctrineLogBundle\EventListener;
 
-use ReflectionClass;
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use JMS\Serializer\SerializerInterface as Serializer;
 
+use Mb\DoctrineLogBundle\Service\AnnotationReader;
 use Mb\DoctrineLogBundle\Service\Logger as LoggerService;
 use Mb\DoctrineLogBundle\Entity\Log as LogEntity;
 use Mb\DoctrineLogBundle\Annotation\Loggable;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Logger
@@ -42,9 +42,14 @@ class Logger
     private $serializer;
 
     /**
-     * @var Reader $reader
+     * @var AnnotationReader
      */
     private $reader;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $monolog;
 
     /**
      * @var array
@@ -56,14 +61,15 @@ class Logger
      * @param EntityManagerInterface $em
      * @param LoggerService          $loggerService
      * @param Serializer             $serializer
-     * @param Reader                 $reader
+     * @param AnnotationReader       $reader
      * @param array                  $ignoreProperties
      */
     public function __construct(
         EntityManagerInterface $em,
         LoggerService $loggerService,
         Serializer $serializer,
-        Reader $reader,
+        AnnotationReader $reader,
+        LoggerInterface $monolog,
         array $ignoreProperties
     ) {
         $this->em = $em;
@@ -71,6 +77,7 @@ class Logger
         $this->serializer = $serializer;
         $this->reader = $reader;
         $this->ignoreProperties = $ignoreProperties;
+        $this->monolog = $monolog;
     }
 
     /**
@@ -134,9 +141,8 @@ class Logger
     private function log($entity, $action)
     {
         try {
-            $class = new ReflectionClass(str_replace('Proxies\__CG__\\', '', get_class($entity)));
-            $annotation = $this->reader->getClassAnnotation($class, Loggable::class);
-            if ($annotation instanceof Loggable) {
+            $this->reader->init($entity);
+            if ($this->reader->isLoggable()) {
                 $changes = null;
                 if ($action === LogEntity::ACTION_UPDATE) {
                     $uow = $this->em->getUnitOfWork();
@@ -150,7 +156,7 @@ class Logger
 
                     // just getting the changed objects ids
                     foreach ($changeSet as $key => &$values) {
-                        if (in_array($key, $this->ignoreProperties)) {
+                        if (in_array($key, $this->ignoreProperties) || !$this->reader->isLoggable($key)) {
                             // ignore configured properties
                             unset($changeSet[$key]);
                         }
@@ -164,17 +170,23 @@ class Logger
                         }
                     }
 
-                    $changes = $this->serializer->serialize($changeSet, 'json');
+                    if (!empty($changeSet)) {
+                        $changes = $this->serializer->serialize($changeSet, 'json');
+                    }
                 }
 
-                $this->logs[] = $this->loggerService->log(
-                    $entity,
-                    $action,
-                    $changes
-                );
+                if ($action === LogEntity::ACTION_UPDATE && !$changes) {
+                    // Log nothing
+                } else {
+                    $this->logs[] = $this->loggerService->log(
+                        $entity,
+                        $action,
+                        $changes
+                    );
+                }
             }
         } catch (\Exception $e) {
-            // todo: log error
+            $this->monolog->error($e->getMessage());
         }
     }
 }

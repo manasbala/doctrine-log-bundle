@@ -62,7 +62,7 @@ $ php bin/console doctrine:schema:update --force
 
 ### Step 4: Configure entities you need to log
 
-Add `@Loggable` annotation in the entity you want to log changes.
+Add `@Loggable` annotation in the entity you want to log changes. By default strategy will be `include_all`, all properties changes will be logged.
 
 ```php
 // src/Entity/User.php
@@ -88,6 +88,98 @@ class User
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+}
+```
+
+#### Strategy
+There are two strategies. `exclude_all` & `include_all`. Exclude all will automatically skip all properties. And icclude all will automatically log all properties.
+
+Strategies are used only for update. Create and Delete actions always logged.
+
+If you want to exclude all properties and only log one property then use strategy `exclude_all` and use `@Log` annotation only in the property you want to log.
+
+```php
+// src/Entity/User.php
+
+<?php
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Mb\DoctrineLogBundle\Annotation\Log;
+use Mb\DoctrineLogBundle\Annotation\Loggable;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Table(name="user")
+ *
+ * @Loggable(strategy="exclude_all")
+ */
+class User
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="text", column="name")
+     * @Log
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="text", column="user_name")
+     */
+    protected $username;
+
+}
+```
+
+Above example will only log for the `$name` property.
+
+If you want to log all but skip one property. Then use strategy `include_all` and in the property use annotation `@Exclude` to skip that property.
+
+```php
+// src/Entity/User.php
+
+<?php
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Mb\DoctrineLogBundle\Annotation\Exclude;
+use Mb\DoctrineLogBundle\Annotation\Loggable;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Table(name="user")
+ *
+ * @Loggable(strategy="include_all")
+ */
+class User
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="text", column="name")
+     * @Exclude
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="text", column="user_name")
+     */
+    protected $username;
+
 }
 ```
 
@@ -109,6 +201,8 @@ mb_doctrine_log:
     - updatedAt
 
 ```
+
+Any property name you configure here, if the Loggable entity has that property will be ignored.
 
 How data will be saved
 ----------------------
