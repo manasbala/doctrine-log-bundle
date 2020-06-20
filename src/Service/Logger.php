@@ -38,7 +38,6 @@ class Logger
     public function log($object, $action, $changes = null) : LogEntity
     {
         $log = new LogEntity();
-
         $log
             ->setObjectClass(str_replace('Proxies\__CG__\\', '', get_class($object)))
             ->setForeignKey($object->getId())

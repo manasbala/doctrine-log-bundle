@@ -1,12 +1,13 @@
 {
     "name": "manasbala/doctrine-log-bundle",
-    "description": "Symfony bundle to enable auto logging doctrine entity chanages.",
+    "description": "Symfony bundle to enable auto logging doctrine entity changes.",
     "type": "symfony-bundle",
     "require": {
         "php": "^7.1.3",
         "jms/serializer-bundle": "^3.4",
         "symfony/orm-pack": "*",
-        "stof/doctrine-extensions-bundle": "^1.3"
+        "stof/doctrine-extensions-bundle": "^1.3",
+        "symfony/monolog-bundle": "^3.5"
     },
     "license": "MIT",
     "authors": [
