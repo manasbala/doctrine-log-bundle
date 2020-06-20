@@ -1,7 +1,7 @@
 # DoctrineLogBundle
-Symfony bundle to enable auto logging doctrine entity changes.
+Symfony bundle to enable auto logging data changes. Works with doctrine entities only. This bundle will save developer's ass to determine how data has been changed :)
 
-Often projects need to log change to see the complete history of changes are made on an object. It's mainly for superadmin who needs to know these information. To control it from a central place and log automatically this bundle is developed. Using this bundle in your symfony project you can choose which entities you want to autolog. This bundle will automatically insert a record each time the entity is changed.
+Often projects need to log change to see the complete history of changes are made on an object. It's mainly for superadmin who needs to know these information. To control it from a central place and log automatically this bundle is developed. Using this bundle in your symfony project you can choose which entities you want to autolog. This bundle will automatically insert a record each time the data is changed. You can configure which property you want to track with 2 strategy. 
 
 This bundle is tested on symfony 4
 
