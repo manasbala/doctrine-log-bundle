@@ -29,11 +29,21 @@ class AnnotationReader
      */
     private $entity;
 
+    /**
+     * AnnotationReader constructor.
+     * @param Reader $reader
+     */
     public function __construct(Reader $reader)
     {
         $this->reader = $reader;
     }
 
+    /**
+     * Init the entity
+     *
+     * @param object $entity
+     * @throws \ReflectionException
+     */
     public function init($entity)
     {
         $this->entity = $entity;
@@ -41,11 +51,24 @@ class AnnotationReader
         $this->classAnnotation = $this->reader->getClassAnnotation($class, Loggable::class);
     }
 
+    /**
+     * Check if class or property is loggable
+     *
+     * @param null|string $property
+     * @return bool
+     */
     public function isLoggable($property = null)
     {
         return !$property ? $this->classAnnotation instanceof Loggable : $this->isPropertyLoggable($property);
     }
 
+    /**
+     * Check if propert is loggable
+     *
+     * @param $property
+     * @return bool
+     * @throws \ReflectionException
+     */
     private function isPropertyLoggable($property)
     {
         $property = new \ReflectionProperty(
