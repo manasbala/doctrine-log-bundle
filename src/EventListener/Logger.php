@@ -167,6 +167,8 @@ class Logger
 
                         if (is_object($values[1]) && method_exists($values[1], 'getId')) {
                             $values[1] = $values[1]->getId();
+                        } elseif ($values[1] instanceof StreamInterface) {
+                            $values[1] = (string) $values[1];
                         }
                     }
 
