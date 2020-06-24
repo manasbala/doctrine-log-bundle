@@ -203,4 +203,12 @@ class Log
     {
         return json_encode(json_decode($this->changes), JSON_PRETTY_PRINT);
     }
+    
+    /**
+     * @return mixed
+     */
+    public function getChangesArray()
+    {
+        return json_decode($this->changes, true);
+    }
 }
