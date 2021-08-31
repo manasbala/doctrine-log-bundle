@@ -200,7 +200,8 @@ mb_doctrine_log:
     - updatedBy
     - createAt
     - updatedAt
-  entity_manager: default
+  entity_manager: 'default'
+  listener_class: 'Mb\DoctrineLogBundle\EventListener\Logger'
 ```
 
 Any property name you configure here, if the Loggable entity has that property will be ignored.

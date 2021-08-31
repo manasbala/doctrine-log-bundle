@@ -27,8 +27,8 @@ class MbDoctrineLogExtension extends Extension
 
         $emName = sprintf('doctrine.orm.%s_entity_manager', $config['entity_manager']);
         $emReference = new Reference($emName);
+        $definition = $container->register('mb_doctrine_log.event_listener.logger', $config['listener_class']);
 
-        $definition = $container->getDefinition($config['listener']);
         $definition->setArgument(0, $emReference);
         $definition->setArgument(4, $config['ignore_properties']);
     }
