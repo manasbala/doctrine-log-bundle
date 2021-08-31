@@ -26,8 +26,8 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('entity_manager')
                 ->defaultValue('default')
             ->end()
-            ->scalarNode('listener')
-                ->defaultValue('mb_doctrine_log.event_listener.logger')
+            ->scalarNode('listener_class')
+                ->defaultValue('Mb\DoctrineLogBundle\EventListener\Logger')
             ->end()
         ;
 
