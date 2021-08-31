@@ -11,14 +11,9 @@
             <tag name="doctrine.event_listener" event="postFlush" priority="1"/>
             <tag name="doctrine.event_listener" event="preRemove" priority="1"/>
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
-            <argument type="service" id="mb_doctrine_log.service.logger"/>
             <argument type="service" id="jms_serializer.serializer"/>
             <argument type="service" id="mb_doctrine_log.service.annotation_reader"/>
             <argument type="service" id="monolog.logger"/>
-        </service>
-
-        <service class="Mb\DoctrineLogBundle\Service\Logger" id="mb_doctrine_log.service.logger">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
         </service>
 
         <service class="Mb\DoctrineLogBundle\Service\AnnotationReader" id="mb_doctrine_log.service.annotation_reader">
@@ -26,3 +21,4 @@
         </service>
     </services>
 </container>
+

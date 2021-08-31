@@ -33,11 +33,6 @@ class Logger
     private $em;
 
     /**
-     * @var LoggerService
-     */
-    private $loggerService;
-
-    /**
      * @var Serializer
      */
     private $serializer;
@@ -59,22 +54,20 @@ class Logger
 
     /**
      * Logger constructor.
+     *
      * @param EntityManagerInterface $em
-     * @param LoggerService          $loggerService
      * @param Serializer             $serializer
      * @param AnnotationReader       $reader
      * @param array                  $ignoreProperties
      */
     public function __construct(
         EntityManagerInterface $em,
-        LoggerService $loggerService,
         Serializer $serializer,
         AnnotationReader $reader,
         LoggerInterface $monolog,
         array $ignoreProperties
     ) {
         $this->em = $em;
-        $this->loggerService = $loggerService;
         $this->serializer = $serializer;
         $this->reader = $reader;
         $this->ignoreProperties = $ignoreProperties;
@@ -134,6 +127,20 @@ class Logger
     }
 
     /**
+     * Saves a log
+     *
+     * @param LogEntity $log
+     * @return bool
+     */
+    public function save(LogEntity $log) : bool
+    {
+        $this->em->persist($log);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
      * Log the action
      *
      * @param object $entity
@@ -181,7 +188,7 @@ class Logger
                 if ($action === LogEntity::ACTION_UPDATE && !$changes) {
                     // Log nothing
                 } else {
-                    $this->logs[] = $this->loggerService->log(
+                    $this->logs[] = $this->createLogEntity(
                         $entity,
                         $action,
                         $changes
@@ -192,4 +199,26 @@ class Logger
             $this->monolog->error($e->getMessage());
         }
     }
+
+    /**
+     * Creates the log entity
+     *
+     * @param object $object
+     * @param string $action
+     * @param string $changes
+     * @return LogEntity
+     */
+    private function createLogEntity($object, $action, $changes = null) : LogEntity
+    {
+        $log = new LogEntity();
+        $log
+            ->setObjectClass(str_replace('Proxies\__CG__\\', '', get_class($object)))
+            ->setForeignKey($object->getId())
+            ->setAction($action)
+            ->setChanges($changes)
+        ;
+
+        return $log;
+    }
 }
+
